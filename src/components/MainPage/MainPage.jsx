@@ -1,31 +1,35 @@
 import { useEffect } from "react";
+import { useParams, useHistory  } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { ProductsSelectors, fetchProducts } from "store";
 import { MainPageCard } from "./MainPageCard";
 import css from "./styles.module.css"
+import { fetchCategory, categoryPageSelectors } from "store/categoryPageSlice";
+import { Banner } from "components/Banner";
 
 export const MainPage = () => {
 
-    const products = useSelector(ProductsSelectors.getProducts)
 
-    console.log(products);
+    const categories = useSelector(categoryPageSelectors.getCategory)
 
-    // const isLoaded = useSelector(ProductsSelectors.isLoaded)
-    // const isLoading = useSelector(ProductsSelectors.isLoading)
-    // const isError = useSelector(ProductsSelectors.isError)
+    const { category } = useParams();
 
     const dispatch = useDispatch()
 
-    const getProducts = () => dispatch(fetchProducts())
+
+
+    const getCategory = (category) => dispatch(fetchCategory(category));
+
+    useEffect(() => {
+      getCategory(category);
+    }, [category]);
     
 
-  useEffect(() => {
-    getProducts()
-  }, []);
 
 
   return <div className={css.wrapper}>
-    {products.map((product) => (
+
+    {categories.map((product) => (
         <MainPageCard {...product}/>
     ))}
   </div>;
